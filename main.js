@@ -2,10 +2,15 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+// Adicione estas linhas no início do seu arquivo main.js
+require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+});
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 650,
+    height: 748,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -33,7 +38,7 @@ app.on('activate', () => {
 ipcMain.handle('save-file', async (event, content) => {
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: 'Salvar Arquivo HTML',
-    defaultPath: path.join(__dirname, 'meu-arquivo.html'),
+    defaultPath: path.join(__dirname, 'pagina-pronta.html'),
     filters: [{ name: 'HTML Files', extensions: ['html'] }]
   });
 
