@@ -12,5 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^30.1.0"
+  },
+  "devDependencies": {
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
