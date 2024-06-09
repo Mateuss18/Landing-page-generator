@@ -5,29 +5,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Landing page generator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
   <div id="app">
-    <h2>Preencha os campos para criar as seções da categoria</h2>
+    <h2>Preencha os campos para criar as seções da página</h2>
     <div class="wrapper">
       <div class="container-inputLabel">
         <label for="title">Insira o título *</label>
         <input type="text" id="title" class="input-field" placeholder="Titulo da seção..">
       </div>
+
       <div class="container-inputLabel">
         <label for="content">Insira o conteúdo (Os parágrafos são separados por linhas) *</label>
-        <textarea id="content" class="input-field"></textarea>
+        <textarea placeholder="Conteúdo da seção.." id="content" class="input-field"></textarea>
       </div>
+
       <div class="container-inputLabel">
         <label for="imgAlt">Insira o alt da imagem *</label>
-        <input type="text" id="imgAlt" class="input-field">
+        <input placeholder="Alt da imagem.." type="text" id="imgAlt" class="input-field">
       </div>
     </div>
 
     <p id="message" class="message"></p>
-    <p id="section-count" class="message">Quantidade de seções adicionadas: 0</p>
+    <p id="section-count" class="messageQtd">Quantidade de seções adicionadas: 0</p>
 
     <div class="button-container">
       <button id="add-section">Adicionar seção</button>
