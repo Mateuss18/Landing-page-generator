@@ -1,55 +1,94 @@
 * {
   box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   background-color: #172035;
   color: #d8d8d8;
   font-family: Arial, sans-serif;
+  height: 670px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #app {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 18px 18px 0 18px;
+  padding: 24px;
   background-color: #202E4C;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.24);
 }
 
 h2 {
+  font-size: 22px;
+  margin: 0 auto 28px auto;
+  max-width: 370px;
   text-align: center;
   color: #FFF;
+  font-weight: 600;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
+}
+
+label {
+  color: #f3f3f3;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid #618AE3;
 }
 
 .input-field {
   width: 100%;
   padding: 6px;
-  margin: 10px 0;
+  margin: 10px 0 0 0;
   background-color: #2F436D;
   color: #d8d8d8;
   border: 1px solid #152037;
   border-radius: 4px;
+  font-size: 14px;
+}
+
+#imgAlt, #title {
+  height: 34px;
+  padding-left: 10px;
+}
+
+.input-field::placeholder {
+  color: #6D82B0;
+  font-weight: 500;
+}
+
+textarea {
+  padding-left: 10px !important;
+  resize: none;
+  height: 200px;
 }
 
 .button-container {
   display: flex;
   justify-content: space-between;
+  margin-top: 28px;
 }
 
 button {
+  font-weight: 600;
+  font-size: 14px;
   padding: 10px 20px;
   background-color: #618AE3;
-  color: #d8d8d8;
-  border: solid 1px #496EBC;
+  color: #FFF;
+  border: solid 1px #3a5691;
   border-radius: 5px;
   cursor: pointer;
+  transition: all ease-in-out 300ms;
 }
 
 button:hover {
@@ -57,5 +96,14 @@ button:hover {
 }
 
 .message {
-  margin: 10px 0;
+  width: fit-content;
+  height: 16px;
+  color: #FFF;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px auto 12px auto;
+}
+
+#section-count {
+  color: #f3f3f3;
 }
