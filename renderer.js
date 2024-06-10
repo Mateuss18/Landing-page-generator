@@ -1,12 +1,22 @@
 let sectionCount = 0;
 let htmlSections = [];
 
+// Função para processar texto e converter aspas simples em tags <strong>
+function processTextWithStrongTags(text) {
+  return text.replace(/'([^']*)'/g, '<strong>$1</strong>');
+}
+
 document.getElementById('add-section').addEventListener('click', () => {
-  const title = document.getElementById('title').value.trim();
-  const content = document.getElementById('content').value.trim().split('\n');
+  const rawTitle = document.getElementById('title').value.trim();
+  const processedTitle = processTextWithStrongTags(rawTitle);
+
+  const rawContent = document.getElementById('content').value.trim();
+  // Dividir o conteúdo em parágrafos com base em uma ou mais linhas em branco
+  const processedContent = rawContent.split(/\n\s*\n/).map(line => processTextWithStrongTags(line));
+
   const imgAlt = document.getElementById('imgAlt').value.trim();
 
-  if (!title || !content || !imgAlt) {
+  if (!rawTitle || !rawContent || !imgAlt) {
     document.getElementById('message').textContent = 'Todos os campos são obrigatórios.';
     return;
   }
@@ -20,8 +30,8 @@ document.getElementById('add-section').addEventListener('click', () => {
       <div class="flexContainer">
         <div class="conteudo__texto">
           <div class="conteudo__wrapper">
-            <h2 class="conteudo__titulo">${title}</h2>
-            ${content.map(p => `<p>${p}</p>`).join('')}
+            <h2 class="conteudo__titulo">${processedTitle}</h2>
+            ${processedContent.map(p => `<p>${p}</p>`).join('')}
           </div>
         </div>
 
@@ -30,7 +40,7 @@ document.getElementById('add-section').addEventListener('click', () => {
         </div>
       </div>
     </div>
-    `;
+  `;
   htmlSections.push(sectionHTML);
 
   document.getElementById('title').value = '';
@@ -48,7 +58,7 @@ document.getElementById('save-file').addEventListener('click', async () => {
     <section id="categoria">
       ${htmlSections.join('')}
     </section>
-    `;
+  `;
 
   const result = await window.electron.saveFile(htmlContent);
   if (result.success) {
