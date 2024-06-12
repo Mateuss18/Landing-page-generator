@@ -6,14 +6,54 @@ function processTextWithStrongTags(text) {
   return text.replace(/'([^']*)'/g, '<strong>$1</strong>');
 }
 
+// Função para processar conteúdo de textarea, transformando listas e parágrafos
+function processContent(text) {
+  const lines = text.split('\n');
+  let inList = false;
+  let processedContent = '';
+
+  lines.forEach(line => {
+    if (line.trim() === '_') {
+      if (inList) {
+        // Fecha a lista se já está em uma
+        processedContent += '</ul>';
+        inList = false;
+      } else {
+        // Abre uma nova lista se não está em uma
+        processedContent += '<ul>';
+        inList = true;
+      }
+    } else if (inList) {
+      // Adiciona itens de lista enquanto está dentro de uma lista
+      if (line.trim().startsWith('-')) {
+        processedContent += `<li><b>${line.trim().substring(1).trim()}</b><br></li>`;
+      } else {
+        processedContent += `<li>${processTextWithStrongTags(line.trim())}</li>`;
+      }
+    } else if (line.trim().startsWith('-')) {
+      // Adiciona linha com <b> e <br> se começa com '-'
+      processedContent += `<b>${line.trim().substring(1).trim()}</b><br>`;
+    } else if (line.trim() !== '') {
+      // Adiciona parágrafos para linhas que não fazem parte de uma lista e não estão vazias
+      processedContent += `<p>${processTextWithStrongTags(line.trim())}</p>`;
+    }
+  });
+
+  // Fecha qualquer lista não fechada
+  if (inList) {
+    processedContent += '</ul>';
+  }
+
+  return processedContent;
+}
+
 document.getElementById('add-section').addEventListener('click', () => {
   const rawTitle = document.getElementById('title').value.trim();
   const processedTitle = processTextWithStrongTags(rawTitle);
 
   const rawContent = document.getElementById('content').value.trim();
-  // Dividir o conteúdo em parágrafos com base em uma ou mais linhas em branco
-  const processedContent = rawContent.split(/\n\s*\n/).map(line => processTextWithStrongTags(line));
-
+  const processedContent = processContent(rawContent);
+  
   const imgAlt = document.getElementById('imgAlt').value.trim();
 
   if (!rawTitle || !rawContent || !imgAlt) {
@@ -31,7 +71,7 @@ document.getElementById('add-section').addEventListener('click', () => {
         <div class="conteudo__texto">
           <div class="conteudo__wrapper">
             <h2 class="conteudo__titulo">${processedTitle}</h2>
-            ${processedContent.map(p => `<p>${p}</p>`).join('')}
+            ${processedContent}
           </div>
         </div>
 
