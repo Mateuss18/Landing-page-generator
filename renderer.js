@@ -76,7 +76,7 @@ document.getElementById('add-section').addEventListener('click', () => {
         </div>
 
         <div class="conteudo__imagem">
-          <img src="categoria-${sectionCount}.webp" alt="${imgAlt}">
+          <img src="{{IMAGENS_LAYOUT}}/conteudo-${sectionCount}.webp" alt="${imgAlt}">
         </div>
       </div>
     </div>
