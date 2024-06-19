@@ -76,7 +76,7 @@ textarea {
 .button-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 button {
@@ -96,12 +96,18 @@ button:hover {
 }
 
 .message {
+  text-align: center;
   width: fit-content;
-  height: 16px;
+  max-width: 500px;
+  height: 17px;
+  max-height: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   color: #FFF;
   font-size: 14px;
   font-weight: 600;
-  margin: 12px auto 12px auto;
+  margin: 10px auto 10px auto;
 }
 
 #section-count {
