@@ -47,6 +47,15 @@ function processContent(text) {
   return processedContent;
 }
 
+// Função para mostrar a mensagem temporariamente
+function showMessage(message) {
+  const messageElement = document.getElementById('message');
+  messageElement.textContent = message;
+  setTimeout(() => {
+    messageElement.textContent = '';
+  }, 6000);
+}
+
 document.getElementById('add-section').addEventListener('click', () => {
   const rawTitle = document.getElementById('title').value.trim();
   const processedTitle = processTextWithStrongTags(rawTitle);
@@ -57,13 +66,13 @@ document.getElementById('add-section').addEventListener('click', () => {
   const imgAlt = document.getElementById('imgAlt').value.trim();
 
   if (!rawTitle || !rawContent || !imgAlt) {
-    document.getElementById('message').textContent = 'Todos os campos são obrigatórios.';
+    showMessage('Todos os campos são obrigatórios.');
     return;
   }
 
   sectionCount++;
   document.getElementById('section-count').textContent = `Quantidade de seções adicionadas: ${sectionCount}`;
-  document.getElementById('message').textContent = `Seção ${sectionCount} adicionada.`;
+  showMessage(`Seção ${sectionCount} adicionada.`);
 
   const sectionHTML = `
     <div class="conteudo-${sectionCount} conteudos">
@@ -90,7 +99,7 @@ document.getElementById('add-section').addEventListener('click', () => {
 
 document.getElementById('save-file').addEventListener('click', async () => {
   if (sectionCount === 0) {
-    document.getElementById('message').textContent = 'Adicione pelo menos uma seção antes de salvar.';
+    showMessage('Adicione pelo menos uma seção antes de salvar.');
     return;
   }
 
@@ -102,8 +111,12 @@ document.getElementById('save-file').addEventListener('click', async () => {
 
   const result = await window.electron.saveFile(htmlContent);
   if (result.success) {
-    document.getElementById('message').textContent = `Arquivo salvo com sucesso: ${result.filePath}`;
+    showMessage(`Arquivo salvo em: ${result.filePath}`);
+    // Redefinir sectionCount e htmlSections após salvar
+    sectionCount = 0;
+    htmlSections = [];
+    document.getElementById('section-count').textContent = 'Quantidade de seções adicionadas: 0';
   } else {
-    document.getElementById('message').textContent = 'O salvamento do arquivo foi cancelado.';
+    showMessage('O salvamento do arquivo foi cancelado.');
   }
 });
