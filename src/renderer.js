@@ -97,6 +97,22 @@ document.getElementById('add-section').addEventListener('click', () => {
   document.getElementById('imgAlt').value = '';
 });
 
+document.getElementById('preview-file').addEventListener('click', () => {
+  if (sectionCount === 0) {
+    showMessage('Adicione pelo menos uma seção antes de visualizar o preview.');
+    return;
+  }
+
+  const htmlContent = `
+    <section id="categoria">
+      ${htmlSections.join('')}
+    </section>
+  `;
+
+  window.electron.previewFile(htmlContent);
+});
+
+
 document.getElementById('save-file').addEventListener('click', async () => {
   if (sectionCount === 0) {
     showMessage('Adicione pelo menos uma seção antes de salvar.');

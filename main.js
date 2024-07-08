@@ -2,17 +2,18 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-// Adicione estas linhas no início do seu arquivo main.js
-require('electron-reload')(__dirname, {
+if (process.env.NODE_ENV === 'development') {
+  require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});
+  });
+}
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 670,
-    height: 754,
+    height: 725,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'src', 'preload.js'),
       contextIsolation: true,
       enableRemoteModule: false
     },
@@ -20,6 +21,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
+  mainWindow.setMenuBarVisibility(false);
 }
 
 app.on('ready', createWindow);
@@ -49,4 +51,37 @@ ipcMain.handle('save-file', async (event, content) => {
   } else {
     return { success: false };
   }
+});
+
+ipcMain.handle('preview-file', async (event, content) => {
+  const cssPath = path.join(__dirname, 'assets', 'base.css');
+  let cssContent = '';
+
+  try {
+    cssContent = fs.readFileSync(cssPath, 'utf-8');
+  } catch (error) {
+    console.error('Erro ao ler o arquivo CSS:', error);
+  }
+
+  const previewContent = `
+    <html>
+      <head>
+        <style>${cssContent}</style>
+      </head>
+      <body>
+        ${content}
+      </body>
+    </html>
+  `;
+
+  const previewWindow = new BrowserWindow({
+    width: 1280,
+    height: 780,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: true
+    }
+  });
+
+  previewWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(previewContent)}`);
 });
