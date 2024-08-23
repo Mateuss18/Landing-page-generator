@@ -74,8 +74,10 @@ document.getElementById('add-section').addEventListener('click', () => {
   document.getElementById('section-count').textContent = `Quantidade de seções adicionadas: ${sectionCount}`;
   showMessage(`Seção ${sectionCount} adicionada.`);
 
+  const formattedSectionNumber = String(sectionCount).padStart(2, '0'); // Formata o número com dois dígitos
+
   const sectionHTML = `
-    <div class="conteudo-${sectionCount} conteudos">
+    <div class="conteudo-${formattedSectionNumber} conteudos">
       <div class="flexContainer">
         <div class="conteudo__texto">
           <div class="conteudo__wrapper">
@@ -85,7 +87,7 @@ document.getElementById('add-section').addEventListener('click', () => {
         </div>
 
         <div class="conteudo__imagem">
-          <img src="{{IMAGENS_LAYOUT}}/conteudo-${sectionCount}.webp" alt="${imgAlt}">
+          <img src="{{IMAGENS_LAYOUT}}/conteudo-${formattedSectionNumber}.webp" alt="${imgAlt}">
         </div>
       </div>
     </div>
@@ -98,20 +100,40 @@ document.getElementById('add-section').addEventListener('click', () => {
 });
 
 document.getElementById('preview-file').addEventListener('click', () => {
-  if (sectionCount === 0) {
-    showMessage('Adicione pelo menos uma seção antes de visualizar o preview.');
+  const rawTitle = document.getElementById('title').value.trim();
+  const rawContent = document.getElementById('content').value.trim();
+  const rawImgAlt = document.getElementById('imgAlt').value.trim();
+
+  if (!rawTitle || !rawContent || !rawImgAlt) {
+    showMessage('Preencha os campos antes de visualizar o preview.');
     return;
   }
 
+  const processedTitle = processTextWithStrongTags(rawTitle);
+  const processedContent = processContent(rawContent);
+  const processedImgAlt = processContent(rawImgAlt);
+
   const htmlContent = `
     <section id="categoria">
-      ${htmlSections.join('')}
+      <div class="conteudos">
+        <div class="flexContainer">
+          <div class="conteudo__texto">
+            <div class="conteudo__wrapper">
+              <h2 class="conteudo__titulo">${processedTitle}</h2>
+              ${processedContent}
+            </div>
+          </div>
+          <div class="conteudo__imagem">
+            <img src="{{IMAGENS_LAYOUT}}/conteudo-1.webp" alt="${processedImgAlt}">
+            <div style="color: black; position: absolute; background: white; bottom: 0" class="preview-alt">${processedImgAlt}</div>
+          </div>
+        </div>
+      </div>
     </section>
   `;
 
   window.electron.previewFile(htmlContent);
 });
-
 
 document.getElementById('save-file').addEventListener('click', async () => {
   if (sectionCount === 0) {
