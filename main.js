@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 670,
-    height: 775,
+    height: 885,
     webPreferences: {
       preload: path.join(__dirname, 'src', 'preload.js'),
       contextIsolation: true,
@@ -21,7 +21,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-  mainWindow.setMenuBarVisibility(false);
+  // mainWindow.setMenuBarVisibility(false);
 }
 
 app.on('ready', createWindow);
