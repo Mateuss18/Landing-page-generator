@@ -1,5 +1,6 @@
 let sectionCount = 0;
 let htmlSections = [];
+let sectionImages = [];
 
 // Função para processar texto e converter aspas simples em tags <strong>
 function processTextWithStrongTags(text) {
@@ -26,13 +27,13 @@ function processContent(text) {
     } else if (inList) {
       // Adiciona itens de lista enquanto está dentro de uma lista
       if (line.trim().startsWith('-')) {
-        processedContent += `<li><b>${line.trim().substring(1).trim()}</b><br></li>`;
+        processedContent += `<li><b>${line.trim().substring(1).trim()}</b></li>`;
       } else {
         processedContent += `<li>${processTextWithStrongTags(line.trim())}</li>`;
       }
     } else if (line.trim().startsWith('-')) {
-      // Adiciona linha com <b> e <br> se começa com '-'
-      processedContent += `<b>${line.trim().substring(1).trim()}</b><br>`;
+      // Adiciona linha com <b> se começa com '-'
+      processedContent += `<b>${line.trim().substring(1).trim()}</b>`;
     } else if (line.trim() !== '') {
       // Adiciona parágrafos para linhas que não fazem parte de uma lista e não estão vazias
       processedContent += `<p>${processTextWithStrongTags(line.trim())}</p>`;
@@ -60,6 +61,7 @@ function showMessage(message) {
 function resetSections() {
   sectionCount = 0;
   htmlSections = [];
+  sectionImages = [];
   document.getElementById('section-count').textContent = 'Quantidade de seções adicionadas: 0';
   document.getElementById('title').value = '';
   document.getElementById('content').value = '';
@@ -76,17 +78,21 @@ document.getElementById('add-section').addEventListener('click', () => {
   const processedContent = processContent(rawContent);
   
   const imgAlt = document.getElementById('imgAlt').value.trim();
+  const imgFile = document.getElementById('imgFile').files[0];
 
-  if (!rawTitle || !rawContent || !imgAlt ) {
+  if (!rawTitle || !rawContent || !imgAlt || !imgFile) {
     showMessage('Todos os campos são obrigatórios.');
     return;
   }
 
   sectionCount++;
+  const formattedSectionNumber = String(sectionCount).padStart(2, '0');
+  const newImageName = `conteudo-${formattedSectionNumber}${imgFile.name.slice(imgFile.name.lastIndexOf('.'))}`;
+  const newImageNameWebp = `conteudo-${formattedSectionNumber}.webp`;
+
   document.getElementById('section-count').textContent = `Quantidade de seções adicionadas: ${sectionCount}`;
   showMessage(`Seção ${sectionCount} adicionada.`);
 
-  const formattedSectionNumber = String(sectionCount).padStart(2, '0');
   const sectionHTML = `
     <div class="conteudo-${formattedSectionNumber} conteudos">
       <div class="flexContainer">
@@ -97,12 +103,18 @@ document.getElementById('add-section').addEventListener('click', () => {
           </div>
         </div>
         <div class="conteudo__imagem">
-          <img src="{{IMAGENS_LAYOUT}}/conteudo-${formattedSectionNumber}.webp" alt="${imgAlt}">
+          <img src="{{IMAGENS_LAYOUT}}/${newImageNameWebp}" alt="${imgAlt}">
         </div>
       </div>
     </div>
   `;
   htmlSections.push(sectionHTML);
+
+  // Armazenar a imagem para processamento posterior
+  sectionImages.push({
+    filePath: imgFile.path, // Extrair o caminho do arquivo
+    newName: newImageName
+  });
 
   document.getElementById('title').value = '';
   document.getElementById('content').value = '';
@@ -154,25 +166,26 @@ document.getElementById('preview-file').addEventListener('click', () => {
 
 document.getElementById('save-file').addEventListener('click', async () => {
   if (sectionCount === 0) {
-      showMessage('Adicione pelo menos uma seção antes de salvar.');
-      return;
+    showMessage('Adicione pelo menos uma seção antes de salvar.');
+    return;
   }
 
   const htmlContent = `
-      <section id="categoria">
-          ${htmlSections.join('')}
-      </section>
+    <section id="categoria">
+      ${htmlSections.join('')}
+    </section>
   `;
 
-  const result = await window.electron.saveFile(htmlContent);
+  const result = await window.electron.saveFile(htmlContent, sectionImages);
 
   if (result.success) {
-      showMessage(`Arquivo salvo com sucesso em: ${result.filePath}`);
-      resetSections(); // Chama o reset das seções somente após a confirmação de salvamento
+    showMessage(`Arquivo salvo com sucesso em: ${result.filePath}`);
+    resetSections();
   } else {
-      showMessage('Ocorreu um erro ao salvar o arquivo.');
+    showMessage('Ocorreu um erro ao salvar o arquivo.');
   }
 });
+
 
 // Adicionar listener para a mensagem de reset
 window.electron.onResetSections(resetSections);

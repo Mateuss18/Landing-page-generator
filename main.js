@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 670,
-    height: 885,
+    height: 860,
     webPreferences: {
       preload: path.join(__dirname, 'src', 'preload.js'),
       contextIsolation: true,
@@ -21,7 +21,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-  // mainWindow.setMenuBarVisibility(false);
+  mainWindow.setMenuBarVisibility(false);
 }
 
 app.on('ready', createWindow);
@@ -38,20 +38,49 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.handle('save-file', async (event, content) => {
+ipcMain.handle('save-file', async (event, content, images) => {
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: 'Salvar Arquivo HTML',
     defaultPath: path.join(__dirname, 'pagina-pronta.html'),
     filters: [{ name: 'HTML Files', extensions: ['html'] }]
   });
 
-  if (!canceled && filePath) {
-    fs.writeFileSync(filePath, content, 'utf-8');
-    return { success: true, filePath };
-  } else {
+  if (canceled || !filePath) {
     return { success: false };
   }
+
+  const dirPath = path.dirname(filePath);
+  const imgsPath = path.join(dirPath, 'imgs');
+
+  try {
+    // Criar pasta 'imgs' se não existir
+    if (!fs.existsSync(imgsPath)) {
+      fs.mkdirSync(imgsPath);
+    }
+
+    // Salvar arquivo HTML
+    fs.writeFileSync(filePath, content, 'utf-8');
+
+    // Processar e salvar imagens
+    for (const image of images) {
+      if (!image.filePath) {
+        console.error('Caminho da imagem está indefinido:', image);
+        continue;
+      }
+
+      const imageData = await fs.promises.readFile(image.filePath);
+      const newImagePath = path.join(imgsPath, image.newName);
+      await fs.promises.writeFile(newImagePath, imageData);
+    }
+
+    event.sender.send('reset-sections');
+    return { success: true, filePath };
+  } catch (error) {
+    console.error('Erro ao salvar arquivo ou imagens:', error);
+    return { success: false, error: error.message };
+  }
 });
+
 
 ipcMain.handle('preview-file', async (event, content) => {
   const cssPath = path.join(__dirname, 'assets', 'base.css');

@@ -68,6 +68,13 @@ li {
   line-height: 1.5;
   color: black;
 }
+.conteudos .conteudo__texto .conteudo__wrapper li:has(b) b {
+  margin-bottom: -10px;
+}
+.conteudos .conteudo__texto .conteudo__wrapper b {
+  display: block;
+  margin-bottom: -24px;
+}
 .conteudos .conteudo__texto .conteudo__wrapper p:last-child {
   margin-bottom: 0;
 }
@@ -108,7 +115,7 @@ li {
   list-style-type: disc;
   line-height: 1.5;
   margin-left: 18px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .conteudos .conteudo__texto ul li:last-of-type {
   margin-bottom: 0px;
@@ -120,6 +127,9 @@ li {
 @media (max-width: 1024px) {
   .conteudos .conteudo__texto .conteudo__wrapper h2 {
     margin-bottom: 16px;
+  }
+  .conteudos .conteudo__texto ul {
+    margin-bottom: 14px;
   }
   .conteudos .flexContainer {
     flex-wrap: wrap;
@@ -147,11 +157,17 @@ li {
     font-weight: 800;
   }
   .conteudos .conteudo__texto ul li {
-    margin: 0 0 14px 18px;
+    margin: 0 0 8px 18px;
   }
   .conteudos .conteudo__texto ul li:has(b) {
-    font-size: 18px;
+    font-size: 16px;
     margin: 16px 0 8px 0;
+  }
+  .conteudos .conteudo__texto .conteudo__wrapper b {
+    margin-bottom: -12px;
+  }
+  .conteudos .conteudo__texto .conteudo__wrapper li:has(b) b {
+    margin-bottom: -6px;
   }
   .conteudos .conteudo__texto .conteudo__wrapper p {
     margin: 14px 0;
