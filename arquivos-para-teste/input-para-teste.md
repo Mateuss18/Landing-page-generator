@@ -1,5 +1,7 @@
 # Insira os dados abaixo para fazer um teste de como funciona o gerador:
 
+###################################### PRIMEIRO TESTE #####################################
+
 ## TIULO
 Por que não pode faltar café no seu negócio?
 
@@ -19,8 +21,10 @@ Iusto omnis, voluptatibus consequatur assumenda eius quae aperiam a tenetur, qui
 # ALT
 Teste alt da imagem
 
+###################################### SEGUNDO TESTE #####################################
+
 ## TIULO
-Titulo
+Titulo desta seção
 
 # CONTEUDO
 'Lorem ipsum 'dolor sit amet, consectetur adipisicing elit. Iusto omnis, voluptatibus consequatur assumenda eius quae aperiam a tenetur, quibusdam, voluptate aliquid soluta earum tempore magni quia quod nisi harum reprehenderit?
@@ -32,12 +36,12 @@ Item 2
 Item 3
 _ 
 
-Lorem ipsum, 'dolor sit' amet consectetur adipisicing elit.
+Exemplo no qual um texto faz referência a 'lista abaixo':
 
 _ 
 Segunda lista item 1
 Segunda lista item 2
-'Segunda lista item 3 strong'
+'Segunda lista item 3 importante'
 _
 
 -Titulo da descrição abaixo

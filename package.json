@@ -5,10 +5,14 @@
   "main": "main.js",
   "build": {
     "appId": "com.landing-page-generator-id",
-    "productName": "Landing Page Generator",
+    "productName": "Gerador de páginas",
     "files": [
       "build/**/*",
       "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "assets/**/*",
       "package.json"
     ],
     "nsis": {
@@ -18,28 +22,27 @@
       "perMachine": true,
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "shortcutName": "Landing Page Generator",
-      "menuCategory": "Landing Page Generator"
+      "shortcutName": "Gerador de páginas",
+      "menuCategory": "Gerador de páginas"
     },
     "directories": {
       "buildResources": "build"
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico",
-      "requestedExecutionLevel": "requireAdministrator"
+      "icon": "assets/imgs/icon.ico"
     },
     "mac": {
       "target": "dmg",
-      "icon": "build/icon.icns"
+      "icon": "assets/imgs/icon.icns"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "build"
+      "icon": "assets/imgs"
     }
   },
   "scripts": {
-    "start": "electron .",
+    "start": "cross-env NODE_ENV=development electron .",
     "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -49,6 +52,7 @@
   "devDependencies": {
     "electron": "^31.1.0",
     "electron-builder": "^24.13.3",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-reload": "^2.0.0-alpha.1",
+    "cross-env": "^7.0.3"
   }
 }
