@@ -2,21 +2,18 @@
   "name": "landing-page-generator",
   "version": "1.0.0",
   "description": "Gerador de landing pages compostas por texto e imagem",
-  "main": "main.js",
-  "build": {
+  "main": "main.js",  "build": {
     "appId": "com.landing-page-generator-id",
     "productName": "Gerador de páginas",
     "files": [
       "build/**/*",
       "main.js",
-      "preload.js",
-      "renderer.js",
+      "src/**/*",
       "index.html",
       "assets/**/*",
       "package.json"
     ],
     "nsis": {
-      "include": "build/installer.nsh",
       "allowToChangeInstallationDirectory": true,
       "oneClick": false,
       "perMachine": true,
@@ -50,9 +47,9 @@
   "author": "Mateus Lopes",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "electron": "^31.1.0",
     "electron-builder": "^24.13.3",
-    "electron-reload": "^2.0.0-alpha.1",
-    "cross-env": "^7.0.3"
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }

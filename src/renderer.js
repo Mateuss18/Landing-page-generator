@@ -2,12 +2,10 @@ let sectionCount = 0;
 let htmlSections = [];
 let sectionImages = [];
 
-// Função para processar texto e converter aspas simples em tags <strong>
 function processTextWithStrongTags(text) {
   return text.replace(/'([^']*)'/g, '<strong>$1</strong>');
 }
 
-// Função para processar conteúdo de textarea, transformando listas e parágrafos
 function processContent(text) {
   const lines = text.split('\n');
   let inList = false;
@@ -16,31 +14,25 @@ function processContent(text) {
   lines.forEach(line => {
     if (line.trim() === '_') {
       if (inList) {
-        // Fecha a lista se já está em uma
         processedContent += '</ul>';
         inList = false;
       } else {
-        // Abre uma nova lista se não está em uma
         processedContent += '<ul>';
         inList = true;
       }
     } else if (inList) {
-      // Adiciona itens de lista enquanto está dentro de uma lista
       if (line.trim().startsWith('-')) {
         processedContent += `<li><b>${line.trim().substring(1).trim()}</b></li>`;
       } else {
         processedContent += `<li>${processTextWithStrongTags(line.trim())}</li>`;
       }
     } else if (line.trim().startsWith('-')) {
-      // Adiciona linha com <b> se começa com '-'
       processedContent += `<b>${line.trim().substring(1).trim()}</b>`;
     } else if (line.trim() !== '') {
-      // Adiciona parágrafos para linhas que não fazem parte de uma lista e não estão vazias
       processedContent += `<p>${processTextWithStrongTags(line.trim())}</p>`;
     }
   });
 
-  // Fecha qualquer lista não fechada
   if (inList) {
     processedContent += '</ul>';
   }
@@ -48,7 +40,6 @@ function processContent(text) {
   return processedContent;
 }
 
-// Função para mostrar a mensagem temporariamente
 function showMessage(message) {
   const messageElement = document.getElementById('message');
   messageElement.textContent = message;
@@ -57,7 +48,6 @@ function showMessage(message) {
   }, 6000);
 }
 
-// Função para resetar as seções
 function resetSections() {
   sectionCount = 0;
   htmlSections = [];
@@ -94,25 +84,27 @@ document.getElementById('add-section').addEventListener('click', () => {
   showMessage(`Seção ${sectionCount} adicionada.`);
 
   const sectionHTML = `
-    <div class="conteudo-${formattedSectionNumber} conteudos">
+    <section class="conteudo-${formattedSectionNumber} conteudos">
       <div class="flexContainer">
-        <div class="conteudo__texto">
-          <div class="conteudo__wrapper">
-            <h2 class="conteudo__titulo">${processedTitle}</h2>
-            ${processedContent}
+        <div class="container">
+          <div class="conteudo__texto">
+            <div class="conteudo__wrapper">
+              <h2 class="conteudo__titulo">${processedTitle}</h2>
+              ${processedContent}
+            </div>
+          </div>
+
+          <div class="conteudo__imagem">
+            <img src="{{IMAGENS_LAYOUT}}/${newImageNameWebp}" alt="${imgAlt}" loading="lazy">
           </div>
         </div>
-        <div class="conteudo__imagem">
-          <img src="{{IMAGENS_LAYOUT}}/${newImageNameWebp}" alt="${imgAlt}">
-        </div>
       </div>
-    </div>
+    </section>
   `;
   htmlSections.push(sectionHTML);
 
-  // Armazenar a imagem para processamento posterior
   sectionImages.push({
-    filePath: imgFile.path, // Extrair o caminho do arquivo
+    filePath: imgFile.path,
     newName: newImageName
   });
 
@@ -141,7 +133,7 @@ document.getElementById('preview-file').addEventListener('click', () => {
   reader.onload = function () {
     const base64Image = reader.result;
     const htmlContent = `
-      <section id="categoria">
+      <div id="categoria-movilife">
         <div class="conteudos">
           <div class="flexContainer">
             <div class="conteudo__texto">
@@ -156,7 +148,7 @@ document.getElementById('preview-file').addEventListener('click', () => {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     `;
 
     window.electron.previewFile(htmlContent);
@@ -171,9 +163,9 @@ document.getElementById('save-file').addEventListener('click', async () => {
   }
 
   const htmlContent = `
-    <section id="categoria">
+    <div id="categoria-movilife">
       ${htmlSections.join('')}
-    </section>
+    </div>
   `;
 
   const result = await window.electron.saveFile(htmlContent, sectionImages);
@@ -187,5 +179,4 @@ document.getElementById('save-file').addEventListener('click', async () => {
 });
 
 
-// Adicionar listener para a mensagem de reset
 window.electron.onResetSections(resetSections);

@@ -11,10 +11,10 @@ if (process.env.NODE_ENV === 'development') {
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 670,
-    height: 860,
-    webPreferences: {
+    height: 860,    webPreferences: {
       preload: path.join(__dirname, 'src', 'preload.js'),
       contextIsolation: true,
+      nodeIntegration: false,
       enableRemoteModule: false
     },
     icon: path.join(__dirname, 'assets/imgs', 'icon.png')
@@ -53,15 +53,12 @@ ipcMain.handle('save-file', async (event, content, images) => {
   const imgsPath = path.join(dirPath, 'imgs');
 
   try {
-    // Criar pasta 'imgs' se não existir
     if (!fs.existsSync(imgsPath)) {
       fs.mkdirSync(imgsPath);
     }
 
-    // Salvar arquivo HTML
     fs.writeFileSync(filePath, content, 'utf-8');
 
-    // Processar e salvar imagens
     for (const image of images) {
       if (!image.filePath) {
         console.error('Caminho da imagem está indefinido:', image);
